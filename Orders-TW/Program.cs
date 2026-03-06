@@ -174,3 +174,5 @@ app.MapHealthChecks("/health");
 app.Logger.LogInformation("PruebaTechTechy Orders API iniciada correctamente en {Environment}", app.Environment.EnvironmentName);
 
 app.Run();
+
+public partial class Program { }

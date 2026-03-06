@@ -1,0 +1,42 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: orders-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: OrdersDb
+      MYSQL_USER: orders_user
+      MYSQL_PASSWORD: orders_pass123
+      MYSQL_ROOT_PASSWORD: root_pass123
+    ports:
+      - "3306:3306"
+    volumes:
+      - orders_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_pass123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Orders-TW/Dockerfile
+    container_name: orders-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: server=db;port=3306;database=OrdersDb;user=orders_user;password=orders_pass123;
+      JwtSettings__SecretKey: pruebatechtechy-secret-key-super-segura-2024-orders-api
+      JwtSettings__Issuer: OrdersAPI
+      JwtSettings__Audience: OrdersAPI
+      JwtSettings__ExpirationMinutes: "60"
+    ports:
+      - "8080:8080"
+
+volumes:
+  orders_mysql_data:

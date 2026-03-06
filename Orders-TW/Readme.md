@@ -1,3 +1,150 @@
+# Orders-TW API
+
+API REST en .NET 8 para gestionar productos, clientes y órdenes de compra.
+
+## Stack
+
+- .NET 8 Web API
+- Entity Framework Core
+- MySQL (Pomelo)
+- Swagger
+- JWT
+- Docker / Docker Compose
+- xUnit (tests de integración de endpoints)
+
+## Estructura
+
+- `Controllers`
+- `Services`
+- `Repositories`
+- `DTOs`
+- `Validators` (FluentValidation + DataAnnotations en DTOs)
+- `Middleware` (manejo global de errores)
+
+## Requisitos previos
+
+- .NET SDK 8+
+- Docker Desktop (opcional, si se corre con contenedores)
+
+## Ejecutar en local (sin Docker)
+
+1. Configura conexión en User Secrets (recomendado):
+
+```bash
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "server=localhost;port=3306;database=OrdersDb;user=orders_user;password=orders_pass123;"
+```
+
+2. Ejecuta la API:
+
+```bash
+dotnet run --project Orders-TW/Orders-TW.csproj
+```
+
+3. Swagger:
+
+- `http://localhost:5000` o `https://localhost:5001` (según perfil de lanzamiento)
+
+## Ejecutar con Docker
+
+Desde la raíz del workspace:
+
+```bash
+docker compose up --build
+```
+
+Servicios:
+
+- API: `http://localhost:8080`
+- MySQL: `localhost:3306`
+
+Para bajar servicios:
+
+```bash
+docker compose down
+```
+
+Para bajar y eliminar volumen de datos:
+
+```bash
+docker compose down -v
+```
+
+## Migraciones EF Core
+
+Crear migración nueva:
+
+```bash
+dotnet ef migrations add NombreMigracion --project Orders-TW/Orders-TW.csproj
+```
+
+Aplicar migraciones:
+
+```bash
+dotnet ef database update --project Orders-TW/Orders-TW.csproj
+```
+
+> Nota: en entorno `Development`, la app también ejecuta `EnsureCreated` y carga datos semilla.
+
+## Endpoints
+
+### Auth
+
+- `POST /api/auth/login` (obtiene JWT)
+
+### Products
+
+- `GET /api/products?page=1&pageSize=10`
+- `GET /api/products/all`
+- `GET /api/products/{id}`
+- `POST /api/products` (JWT)
+- `PUT /api/products/{id}` (JWT)
+- `DELETE /api/products/{id}` (JWT)
+
+### Customers
+
+- `GET /api/customers?page=1&pageSize=10`
+- `GET /api/customers/all`
+- `GET /api/customers/{id}`
+- `POST /api/customers` (JWT)
+
+### Orders
+
+- `GET /api/orders?page=1&pageSize=10`
+- `GET /api/orders/all`
+- `GET /api/orders/{id}`
+- `POST /api/orders` (JWT)
+
+## Validaciones y manejo de errores
+
+- DataAnnotations en DTOs de entrada.
+- FluentValidation para reglas de negocio/entrada.
+- Middleware global para mapear excepciones a HTTP (`400`, `404`, `401`, `500`).
+
+## Pruebas
+
+Proyecto de tests: `Orders-TW.Tests`
+
+Ejecutar:
+
+```bash
+dotnet test .\Orders-TW.Tests\Orders-TW.Tests.csproj
+```
+
+Incluye pruebas de integración para:
+
+- Login JWT
+- Endpoints públicos (`GET`) de products/customers/orders
+- Endpoints protegidos (`POST/PUT/DELETE`) con y sin token
+- Creación de órdenes validando cálculo de total y reducción de stock
+
+## Estado respecto a la consigna
+
+- Funcionalidad principal: ✅
+- Arquitectura por capas con DTOs/repositorios/servicios: ✅
+- EF Core: ✅
+- Docker, Swagger, JWT: ✅
+- Base de datos exigida (SQL Server o SQLite): ⚠️ pendiente (actualmente MySQL)
+
 # 🛒 API REST - Sistema de Gestión de Órdenes de Compra
 
 ## 🚀 Tecnologías y Arquitectura
