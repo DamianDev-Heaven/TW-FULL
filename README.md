@@ -2,6 +2,7 @@
 
 API REST en .NET 8 para gestión de productos, clientes y órdenes de compra.
 
+
 ## ✅ Forma principal de probar: Docker (recomendado)
 
 Este proyecto está preparado para que lo pruebes de punta a punta con Docker Compose (API + MySQL) sin configurar nada extra en local.
@@ -61,6 +62,9 @@ Respuesta esperada:
 - `200 OK`
 - Devuelve `token`, `expiresIn`, `username`
 
+<img width="1135" height="551" alt="imagen" src="https://github.com/user-attachments/assets/f1222e81-572f-4700-971d-71a9fb63c04e" />
+
+
 ## 5) Probar endpoints protegidos (con token)
 
 Con el token JWT, prueba:
@@ -85,6 +89,9 @@ Flujo recomendado:
 También valida:
 - Si el stock no alcanza, retorna `400`.
 - El total de la orden se calcula automáticamente.
+
+<img width="1137" height="641" alt="imagen" src="https://github.com/user-attachments/assets/7585587a-7f63-430c-b423-278587fe4590" />
+
 
 ## 7) Parar entorno Docker
 
@@ -177,6 +184,9 @@ Cubre:
 - Endpoints públicos (`GET`) de products/customers/orders
 - Endpoints protegidos con y sin token
 - Creación de órdenes validando total y reducción de stock
+
+<img width="581" height="233" alt="{4069CE78-5200-4261-B865-F949BCAC3FF0}" src="https://github.com/user-attachments/assets/65ae5996-abac-4b92-b09a-e55fdfd5f4b1" />
+
 
 ---
 
