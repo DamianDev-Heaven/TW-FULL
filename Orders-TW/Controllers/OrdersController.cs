@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Orders_TW.DTOs.Orders;
 using Orders_TW.Models;
 using Orders_TW.Services.Interfaces;
@@ -47,9 +48,11 @@ namespace Orders_TW.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(OrderDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<OrderDto>> Create([FromBody] CreateOrderDto dto)
         {
             var order = await _orderService.CreateAsync(dto);

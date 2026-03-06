@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Orders_TW.DTOs.Customers;
 using Orders_TW.Models;
 using Orders_TW.Services.Interfaces;
@@ -47,8 +48,10 @@ namespace Orders_TW.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<CustomerDto>> Create([FromBody] CreateCustomerDto dto)
         {
             var customer = await _customerService.CreateAsync(dto);
