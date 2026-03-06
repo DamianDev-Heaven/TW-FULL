@@ -42,6 +42,14 @@ namespace Orders_TW.Middleware
                 _ => HttpStatusCode.InternalServerError
             };
 
+            var errorType = statusCode switch
+            {
+                HttpStatusCode.BadRequest => "BadRequest",
+                HttpStatusCode.NotFound => "NotFound",
+                HttpStatusCode.Unauthorized => "Unauthorized",
+                _ => "InternalServerError"
+            };
+
             var response = context.Response;
             response.ContentType = "application/json";
             response.StatusCode = (int)statusCode;
@@ -50,10 +58,12 @@ namespace Orders_TW.Middleware
             {
                 StatusCode = (int)statusCode,
                 Message = exception.Message,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                Error = errorType,
+                TraceId = context.TraceIdentifier
             };
 
-            if (_environment.IsDevelopment())
+            if (_environment.IsDevelopment() && statusCode == HttpStatusCode.InternalServerError)
             {
                 errorResponse.Details = exception.StackTrace;
                 errorResponse.Type = exception.GetType().Name;
@@ -91,8 +101,10 @@ namespace Orders_TW.Middleware
     public class ErrorResponse
     {
         public int StatusCode { get; set; }
+        public string Error { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public DateTime Timestamp { get; set; }
+        public string TraceId { get; set; } = string.Empty;
         public string? Details { get; set; }
         public string? Type { get; set; }
     }
