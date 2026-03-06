@@ -125,6 +125,25 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
+// Seed data en desarrollo
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        try
+        {
+            context.Database.EnsureCreated();
+            DataSeeder.SeedData(context);
+            app.Logger.LogInformation("Datos de prueba cargados correctamente");
+        }
+        catch (Exception ex)
+        {
+            app.Logger.LogWarning(ex, "Error al cargar datos de prueba. Puede que ya existan.");
+        }
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
