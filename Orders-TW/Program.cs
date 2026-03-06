@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        // PRODUCCIÓN: Cambiar AllowAnyOrigin por orígenes específicos
+        // PRODUCCIï¿½N: Cambiar AllowAnyOrigin por orï¿½genes especï¿½ficos
         // policy.WithOrigins("https://tuapp.com", "https://admin.tuapp.com")
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
@@ -40,7 +40,7 @@ if (string.IsNullOrEmpty(secretKey) || secretKey.Length < 32)
 {
     throw new InvalidOperationException(
         "JWT SecretKey debe ser configurada y tener al menos 32 caracteres. " +
-        "Para desarrollo, está en appsettings.json. Para producción, usar variables de entorno o Azure Key Vault.");
+        "Para desarrollo, estï¿½ en appsettings.json. Para producciï¿½n, usar variables de entorno o Azure Key Vault.");
 }
 
 builder.Services.AddAuthentication(options =>
@@ -69,7 +69,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "PruebaTechTechy Orders API",
         Version = "v1.0",
-        Description = "API REST profesional para gestionar sistema de órdenes de compra"
+        Description = "API REST profesional para gestionar sistema de ï¿½rdenes de compra"
     });
     
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -103,8 +103,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     if (string.IsNullOrEmpty(connectionString))
     {
         throw new InvalidOperationException(
-            "No se encontró la cadena de conexión 'DefaultConnection'. " +
-            "Configúrala usando User Secrets: dotnet user-secrets set \"ConnectionStrings:DefaultConnection\" \"tu_cadena_aqui\"");
+            "No se encontrï¿½ la cadena de conexion 'DefaultConnection'. " +
+            "Configï¿½rala usando User Secrets: dotnet user-secrets set \"ConnectionStrings:DefaultConnection\" \"tu_cadena_aqui\"");
     }
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
