@@ -65,6 +65,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddSwaggerGen(c =>
 {
+    c.EnableAnnotations();
+
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "PruebaTechTechy Orders API",

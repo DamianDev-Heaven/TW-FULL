@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Orders_TW.DTOs.Orders;
 using Orders_TW.Models;
 using Orders_TW.Services.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Orders_TW.Controllers
 {
@@ -19,6 +20,9 @@ namespace Orders_TW.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Lista órdenes paginadas",
+            Description = "Obtiene órdenes con sus detalles usando parámetros opcionales page y pageSize.")]
         [ProducesResponseType(typeof(PagedResult<OrderDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<PagedResult<OrderDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
@@ -27,6 +31,9 @@ namespace Orders_TW.Controllers
         }
 
         [HttpGet("all")]
+        [SwaggerOperation(
+            Summary = "Lista todas las órdenes",
+            Description = "Obtiene todas las órdenes con sus detalles sin aplicar paginación.")]
         [ProducesResponseType(typeof(IEnumerable<OrderDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllWithoutPagination()
         {
@@ -35,6 +42,9 @@ namespace Orders_TW.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary = "Obtiene una orden por ID",
+            Description = "Busca una orden específica por su ID y devuelve 404 si no existe.")]
         [ProducesResponseType(typeof(OrderDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<OrderDto>> GetById(int id)
@@ -49,6 +59,9 @@ namespace Orders_TW.Controllers
 
         [HttpPost]
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Crea una orden",
+            Description = "Crea una nueva orden validando stock disponible, calculando el total automáticamente y reduciendo el stock de los productos. Requiere autenticación JWT.")]
         [ProducesResponseType(typeof(OrderDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

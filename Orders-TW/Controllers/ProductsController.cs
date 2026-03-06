@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Orders_TW.DTOs.Products;
 using Orders_TW.Models;
 using Orders_TW.Services.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Orders_TW.Controllers
 {
@@ -21,6 +22,9 @@ namespace Orders_TW.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Lista productos paginados",
+            Description = "Obtiene productos con paginación usando parámetros opcionales page y pageSize.")]
         [ProducesResponseType(typeof(PagedResult<ProductDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<PagedResult<ProductDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
@@ -29,6 +33,9 @@ namespace Orders_TW.Controllers
         }
 
         [HttpGet("all")]
+        [SwaggerOperation(
+            Summary = "Lista todos los productos",
+            Description = "Obtiene todos los productos sin aplicar paginación.")]
         [ProducesResponseType(typeof(IEnumerable<ProductDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllWithoutPagination()
         {
@@ -37,6 +44,9 @@ namespace Orders_TW.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary = "Obtiene un producto por ID",
+            Description = "Busca un producto específico por su ID y devuelve 404 si no existe.")]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductDto>> GetById(int id)
@@ -54,6 +64,9 @@ namespace Orders_TW.Controllers
 
         [HttpPost]
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Crea un producto",
+            Description = "Crea un nuevo producto. Requiere autenticación JWT.")]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -70,6 +83,9 @@ namespace Orders_TW.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Actualiza un producto",
+            Description = "Actualiza los datos de un producto existente por ID. Requiere autenticación JWT.")]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -94,6 +110,9 @@ namespace Orders_TW.Controllers
 
         [HttpDelete("{id}")]
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Elimina un producto",
+            Description = "Elimina un producto por ID. Requiere autenticación JWT.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
