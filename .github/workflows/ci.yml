@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+    paths-ignore:
+      - "**/*.md"
+  pull_request:
+    paths-ignore:
+      - "**/*.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+          cache: true
+          cache-dependency-path: |
+            **/*.csproj
+            **/packages.lock.json
+
+      - name: Restore
+        run: dotnet restore Orders-TW.slnx
+
+      - name: Build
+        run: dotnet build Orders-TW.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: >-
+          dotnet test Orders-TW.Tests/Orders-TW.Tests.csproj
+          --configuration Release
+          --no-build
+          --results-directory ./TestResults
+          --collect:"XPlat Code Coverage"
+          --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            TestResults/**
