@@ -180,6 +180,44 @@ Cubre:
 
 ---
 
+## CI/CD (GitHub Actions)
+
+Se incluyen 2 workflows en `.github/workflows`:
+
+- `ci.yml`: corre en cada `push` y `pull_request`.
+  - `dotnet restore`
+  - `dotnet build` (Release)
+  - `dotnet test` con cobertura (`XPlat Code Coverage`)
+  - Publica artefactos de test (`.trx` + `TestResults`)
+  - Optimización: caché de NuGet + cancelación de ejecuciones duplicadas por rama
+  - Optimización: ignora cambios solo de documentación (`*.md`)
+
+- `cd.yml`: corre automáticamente cuando `CI` termina con éxito en `main` (y manual con `workflow_dispatch`).
+  - Construye imagen Docker usando `Orders-TW/Dockerfile`
+  - Publica en GitHub Container Registry (GHCR)
+  - Tags: `latest` (solo rama principal) y SHA corto
+  - Optimización: caché de capas Docker (`buildx` + `gha`) y cancelación de publicaciones duplicadas
+
+Imagen publicada:
+
+```text
+ghcr.io/<tu-usuario>/orders-tw-api
+```
+
+### Requisitos para CD
+
+1. Ir a `Settings > Actions > General` del repositorio.
+2. Verificar que `Workflow permissions` permita `Read and write permissions`.
+3. Asegurar que el workflow tenga permisos de `packages: write` (ya incluido en `cd.yml`).
+
+### Ejecutar CD manualmente
+
+1. Ir a `Actions`.
+2. Seleccionar workflow `CD`.
+3. Clic en `Run workflow`.
+
+---
+
 ## Estado respecto a la consigna
 
 ### Cumplido
